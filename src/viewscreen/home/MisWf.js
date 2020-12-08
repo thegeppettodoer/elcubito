@@ -18,7 +18,10 @@ import {
   LogBox,
   Animated,
 } from "react-native";
-import {windowWidth as width, windowHeight as height} from "../../utils/Dimentions";
+import {
+  windowWidth as width,
+  windowHeight as height,
+} from "../../utils/Dimentions";
 
 import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components/native";
@@ -77,7 +80,7 @@ const MisWf = ({ navigation }) => {
       setPagedatosmiswf(0);
       obtenerDatosMisWF().then((res) => {
         setDataVideos(res);
-        setDatosmiswf(res); 
+        setDatosmiswf(res);
         console.log(">MisWf traer todo", ret);
       });
     }
@@ -85,9 +88,9 @@ const MisWf = ({ navigation }) => {
       var misDatos = dataVideos.slice();
 
       if (!!misDatos.find((e) => e.id.toString() == (ret + 2 + 1).toString())) {
-     //no carga
+        //no carga
       } else {
-      //si carga
+        //si carga
         if (ultimo) {
           console.log("ultimo");
           setTimeout(() => setUltimo(false), 300); //  ultimo
@@ -117,37 +120,11 @@ const MisWf = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log(">MisWf > setUltimo(true)---- useEffect >", selected);
+    // console.log(">MisWf > setUltimo(true)---- useEffect >", selected);
     loadDataVideos(selected).then((res) => {});
   }, [selected]);
 
   // LogBox.ignoreAllLogs(); //Ignore all log notifications
-
-  const LoadArrayMapXX = () => {
-    if (Array.isArray(dataVideos)) {
-      let data = dataVideos.map((item, index) => {
-        return (
-          <View key={index} style={{ backgroundColor: "#000" }}>
-            <VideoPlayer
-              video={item.videoUrl}
-              poster={item.poster}
-              isPlay={selected === index && empezar}
-              xkey={index}
-              reiniciar={false}
-              control={false}
-            />
-          </View>
-        );
-      });
-      return <Fragment key={"item.id"}>{data}</Fragment>;
-    } else {
-      return (
-        <View>
-          <Text>{"...No carga..."}</Text>
-        </View>
-      );
-    }
-  };
 
   const LoadArrayMap = () => {
     if (Array.isArray(dataVideos)) {
@@ -180,7 +157,7 @@ const MisWf = ({ navigation }) => {
             >
               <View
                 collapsable={false}
-                key={"vp"+item.id}
+                key={"vp" + item.id}
                 style={{
                   zIndex: 1,
                   position: "absolute",
@@ -191,7 +168,7 @@ const MisWf = ({ navigation }) => {
                 }}
               >
                 <TouchableHighlight
-                  key={"t"+item.id}
+                  key={"t" + item.id}
                   onPress={() => {
                     empezar ? setEmpezar(false) : setEmpezar(true);
                   }}
@@ -199,7 +176,7 @@ const MisWf = ({ navigation }) => {
                 >
                   <View
                     collapsable={false}
-                    key={"v"+item.id}
+                    key={"v" + item.id}
                     style={{
                       width: width,
                       height: height,
@@ -210,11 +187,9 @@ const MisWf = ({ navigation }) => {
                 </TouchableHighlight>
               </View>
 
-           
-
               <View
                 collapsable={false}
-                key={"v"+item.id}
+                key={"v" + item.id}
                 style={{
                   zIndex: 2,
                   position: "absolute",
@@ -224,7 +199,7 @@ const MisWf = ({ navigation }) => {
                 }}
               >
                 <Button
-                  key={"b"+item.id }
+                  key={"b" + item.id}
                   title={item.titulo}
                   color="red"
                   onPress={() => {
@@ -236,6 +211,7 @@ const MisWf = ({ navigation }) => {
                     });
                   }}
                 />
+                
               </View>
             </Gradient>
           </View>
@@ -254,7 +230,6 @@ const MisWf = ({ navigation }) => {
     }
   };
 
- 
   return language ? (
     <SafeAreaView key="s1">
       <ScrollView

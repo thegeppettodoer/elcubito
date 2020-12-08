@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
             console.log(">AuthProvider>login>", e);
           }
         },
-        
+
         fbLogin: async () => {
           try {
             console.log(">AuthProvider>fbLogin> 1 !Facebook.initializeAsync");
@@ -52,15 +52,11 @@ export const AuthProvider = ({ children }) => {
               appId: "383007856067427", //APP_ID
             });
 
-         
-
             const result = await Facebook.logInWithReadPermissionsAsync({
               permissions: ["public_profile", "email"],
             });
 
             const { type, token } = result;
-
-         
 
             if (!token) {
               throw ">AuthProvider>Token no obtenido!";
@@ -101,7 +97,6 @@ export const AuthProvider = ({ children }) => {
             await firebase.auth().signOut();
             await AsyncStorage.clear();
             console.log(">AuthProvider>logout>", "OK");
-
           } catch (e) {
             console.log(">AuthProvider>logout>", e);
           }
@@ -118,7 +113,11 @@ export const AuthProvider = ({ children }) => {
             if (ret === 0) {
               setPagedatosmiswf(0);
               setDatosmiswf(null);
-              console.log('>AuthProvider > Reiniciar > ret===0 >',ret,pagedatosmiswf);
+              console.log(
+                ">AuthProvider > Reiniciar > ret===0 >",
+                ret,
+                pagedatosmiswf
+              );
             } else {
               if (ret > 0) {
                 ret = ret;
@@ -133,7 +132,9 @@ export const AuthProvider = ({ children }) => {
             let limiteInitial = val ? 10000 : 3;
 
             if (datosmiswf && ret <= 2 && ret !== 0 && !val) {
-              console.log('>AuthProvider> obtenerDatosMisWF>return el mismo datosmiswf');
+              console.log(
+                ">AuthProvider> obtenerDatosMisWF>return el mismo datosmiswf"
+              );
               return datosmiswf;
             }
 
@@ -159,8 +160,6 @@ export const AuthProvider = ({ children }) => {
             console.log(">datosMisWF > AuthProvider>obtenerDatosMisWF>err>", e);
           }
         },
- 
- 
       }}
     >
       {children}
