@@ -17,6 +17,7 @@ import {
   SafeAreaView,
   LogBox,
   Animated,
+  TouchableOpacity,
 } from "react-native";
 import {
   windowWidth as width,
@@ -155,7 +156,7 @@ const MisWf = ({ navigation }) => {
                 "rgba(26,26,26,0.6)",
               ]}
             >
-              <View
+              {/* <View
                 collapsable={false}
                 key={"vp" + item.id}
                 style={{
@@ -164,15 +165,16 @@ const MisWf = ({ navigation }) => {
                   alignSelf: "center",
                   alignItems: "center",
                   marginTop: 0,
-                  backgroundColor: "transparent",
+                  backgroundColor: "red",
                 }}
-              >
-                <TouchableHighlight
+              > */}
+                <TouchableOpacity
                   key={"t" + item.id}
                   onPress={() => {
                     empezar ? setEmpezar(false) : setEmpezar(true);
                   }}
                   underlayColor="transparent"
+                  style={{zIndex:1}}
                 >
                   <View
                     collapsable={false}
@@ -182,10 +184,11 @@ const MisWf = ({ navigation }) => {
                       height: height,
                       alignItems: "center",
                       backgroundColor: "transparent",
+                      zIndex: 1,
                     }}
                   ></View>
-                </TouchableHighlight>
-              </View>
+                </TouchableOpacity>
+              {/* </View> */}
 
               <View
                 collapsable={false}

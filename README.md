@@ -1,4 +1,4 @@
-# dgbverpeliculas
+# dgbelcubito
 
 Creado por : David Garcia B.
-Para: Peru Apps
+Para: dgb

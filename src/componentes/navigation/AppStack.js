@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import {
   MaterialCommunityIcons,
   Ionicons,
@@ -9,14 +11,25 @@ import {
   AntDesign,
 } from "@expo/vector-icons";
 
-import { Platform, InteractionManager, TouchableHighlight } from "react-native";
+import {
+  Platform,
+  InteractionManager,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { useKeepAwake } from "expo-keep-awake";
 
 import HomeScreen from "../../viewscreen/home/HomeScreen";
 import DetalleMisWfScreen from "../../viewscreen/home/DetalleMisWfScreen";
 import SetupScreen from "../../viewscreen/configuracion/SetupScreen";
+import CuboScreen from "../../viewscreen/cubo/CuboScreen";
 
 import { AuthContext } from "./AuthProvider";
+import Constants from "expo-constants";
+import { windowHeight } from "../../utils/Dimentions";
 
 const InicioStack = createStackNavigator();
 function InicioStackScreen({ navigation }) {
@@ -49,7 +62,23 @@ function SetupStackScreen() {
   );
 }
 
-const Tab = createMaterialBottomTabNavigator();
+const CuboStack = createStackNavigator();
+function CuboStackScreen() {
+  return (
+    <CuboStack.Navigator
+      screenOptions={{
+        tabBar: {
+          visible: false,
+        },
+        headerShown: false,
+      }}
+    >
+      <CuboStack.Screen name="Cubo" component={CuboScreen} />
+    </CuboStack.Navigator>
+  );
+}
+
+const Tab = createBottomTabNavigator(); //createMaterialBottomTabNavigator();
 const xconfig = {
   animation: "spring",
   config: {
@@ -77,12 +106,24 @@ function TabStack({ navigation }) {
   return (
     <Tab.Navigator
       barStyle={{
+        backgroundColor: "blue",
         display: isTabVisible ? null : "none",
         backgroundColor: colorClicked,
+        position: "absolute",
+        zIndex: 99,
+        flex: 1,
+        // flexDirection:"row"
       }}
       tabBarOptions={{
         activeTintColor: "#edebeb",
         inactiveTintColor: "#edebeb",
+        showIcon: true,
+        style: styles.navigator,
+        // labelStyle: {
+        // position: "absolute",
+        // top: Constants.vh(35),
+        //fontSize: Constants.vh(18),
+        // },
       }}
       options={{ headerShown: false }}
       screenOptions={{
@@ -91,6 +132,12 @@ function TabStack({ navigation }) {
         },
       }}
     >
+      {/* //   tabBar={(props) => <CustomTabBar {...props} />}
+    // >
+    //   <Tab.Screen name="InicioStack" component={InicioStackScreen} key="1" />
+    //   <Tab.Screen name="CuboStack" component={CuboStackScreen} key="2"/>
+    //   <Tab.Screen name="SetupStack" component={SetupStackScreen} key="3" /> */}
+
       <Tab.Screen
         name="InicioStack"
         component={InicioStackScreen}
@@ -103,8 +150,47 @@ function TabStack({ navigation }) {
           tabBarLabel: xtextHome,
           // tabBarColor: "#009387",
           tabBarIcon: ({ color }) => (
-            <AntDesign name="home" size={24} color={color} />
+            <View style={styles.tab}>
+              <AntDesign name="home" size={24} color={color} />
+            </View>
           ),
+        }}
+      />
+
+      <Tab.Screen
+        name="CuboStack"
+        component={CuboStackScreen}
+        // sceneContainerStyle={{position:'absolute'}}
+        options={{
+          // unmountOnBlur: true,
+        
+          tabBarLabel: "Cubo",
+          tabBarIcon: ({ color }) => (
+            <TouchableOpacity
+              // style={styles.forgotButton}
+              onPress={() => {
+                navigation.navigate("CuboStack");
+              }}
+              style={{
+                position: "absolute",
+                zIndex: 999999,
+                flex: 1,
+                bottom:2, // space from bottombar
+                height: 60,
+                width: 60,
+                borderRadius: 50,
+                backgroundColor: "green",
+                justifyContent: "center",
+                alignItems: "center",
+                // elevation: 10,
+              }}
+            >
+              <Ionicons name="ios-cube" size={50} color={color} />
+            </TouchableOpacity>
+          ),
+        }}
+        listeners={{
+          tabPress: (e) => {},
         }}
       />
 
@@ -114,11 +200,13 @@ function TabStack({ navigation }) {
         options={{
           tabBarLabel: xtextConfigurar,
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="account-settings"
-              size={24}
-              color={color}
-            />
+            <View style={styles.tab}>
+              <MaterialCommunityIcons
+                name="account-settings"
+                size={24}
+                color={color}
+              />
+            </View>
           ),
         }}
         listeners={{
@@ -195,3 +283,99 @@ export default function App() {
     </Stack.Navigator>
   );
 }
+
+// function CustomTabBar({ state, descriptors, navigation, position }) {
+//   return (
+//     <View
+//       style={{
+//         flexDirection: "row",
+//         height: 40,
+//         alignItems: "center",
+//         justifyContent: "space-around",
+//       }}
+//     >
+//       {state.routes.map((route, index) => {
+//         const { options } = descriptors[route.key];
+//         const label =
+//           options.tabBarLabel !== undefined
+//             ? options.tabBarLabel
+//             : options.title !== undefined
+//             ? options.title
+//             : route.name;
+
+//         const isFocused = state.index === index;
+
+//         const onPress = () => {
+//           const event = navigation.emit({
+//             type: "tabPress",
+//             target: route.key,
+//             canPreventDefault: true,
+//           });
+
+//           if (!isFocused && !event.defaultPrevented) {
+//             navigation.navigate(route.name);
+//           }
+//         };
+
+//         const onLongPress = () => {
+//           navigation.emit({
+//             type: "tabLongPress",
+//             target: route.key,
+//           });
+//         };
+
+//         const inputRange = state.routes.map((_, i) => i);
+
+//         return (
+//           <TouchableOpacity
+//             accessibilityRole="button"
+//             accessibilityStates={isFocused ? ["selected"] : []}
+//             accessibilityLabel={options.tabBarAccessibilityLabel}
+//             testID={options.tabBarTestID}
+//             onPress={onPress}
+//             onLongPress={onLongPress}
+//           >
+//             {route.name === "CuboStack" ? (
+//               <Image key={route.name +1}
+//                 style={styles.logo}
+//                 source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
+//               />
+//             ) : (
+//               <Image key={route.name+2}
+//                 style={styles.logo_tiny}
+//                 source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
+//               />
+//             )}
+//           </TouchableOpacity>
+//         );
+//       })}
+//     </View>
+//   );
+// }
+
+const styles = StyleSheet.create({
+  tab: {
+    position: "absolute",
+    backgroundColor: "transparent",
+  },
+  navigator: {
+    borderTopWidth: 0,
+    backgroundColor: "transparent",
+    elevation: 10,
+    flexDirection: "row",
+    zIndex: 2,
+    position: "absolute",
+    height: 60,
+    flex: 0,
+  },
+
+  logo: {
+    width: 80,
+    height: 80,
+    bottom: 30,
+  },
+  logo_tiny: {
+    width: 30,
+    height: 30,
+  },
+});
